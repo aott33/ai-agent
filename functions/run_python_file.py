@@ -1,9 +1,9 @@
+from google.genai import types
 import subprocess
 import os
 
 def run_python_file(working_directory, file_path, args=[]):
 	try:
-
 		file_content_string = ""
 
 		fullpath = os.path.join(working_directory, file_path)
@@ -38,4 +38,23 @@ def run_python_file(working_directory, file_path, args=[]):
 		return return_string
 
 	except Exception as e:
-		return f"Error: executing Python file {str(e)}"   
+		return f"Error: executing Python file {str(e)}"
+
+schema_run_python_file = types.FunctionDeclaration(
+	name="run_python_file",
+	description="Executes a Python file within a specified working directory with optional arguments, returning stdout, stderr, and exit codes",
+	parameters=types.Schema(
+		type=types.Type.OBJECT,
+		properties={
+			"file_path": types.Schema(
+				type=types.Type.STRING,
+				description="Relative path to the Python file within the working directory that should be executed by the function.",
+			),
+			"args": types.Schema(
+				type=types.Type.ARRAY,
+				description="Optional list of command-line arguments to pass to the Python script when executing it via subprocess call.",
+			    items=types.Schema(type=types.Type.STRING)
+            ),
+		},
+	),
+)
